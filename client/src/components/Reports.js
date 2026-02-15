@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './Reports.css';
-import axios from 'axios';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://expense-tracker-i1qc.onrender.com/api';
+import { reportAPI } from '../services/api';
 
 function Reports() {
   const [reportType, setReportType] = useState('financial');
@@ -29,36 +27,32 @@ function Reports() {
     setIsGenerating(true);
 
     try {
-      let endpoint = '';
-      let params = {};
-
+      let response;
+      
       switch (reportType) {
         case 'financial':
-          endpoint = '/reports/financial';
-          params = {
+          response = await reportAPI.getFinancial({
             startDate: reportParams.startDate,
             endDate: reportParams.endDate,
             type: reportParams.type
-          };
+          });
           break;
         case 'category':
-          endpoint = '/reports/category';
-          params = {
+          response = await reportAPI.getCategory({
             year: reportParams.year,
             month: reportParams.month
-          };
+          });
           break;
         case 'yearly':
-          endpoint = '/reports/yearly';
-          params = {
+          response = await reportAPI.getYearly({
             year: reportParams.year
-          };
+          });
           break;
         default:
           throw new Error('Invalid report type');
       }
 
-      const response = await axios.get(`${API_BASE_URL}${endpoint}`, { params });
+      console.log('Report response:', response.data);
       setGeneratedReport(response.data.report);
     } catch (error) {
       console.error('Report generation error:', error);
