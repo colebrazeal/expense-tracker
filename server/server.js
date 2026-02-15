@@ -14,7 +14,7 @@ app.use(security.validateRequest);
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5001',
-  'https://expense-tracker-pi-opal-82.vercel.app',
+  'https://expense-tracker-pi-opal-82.vercel.app/',
   /https:\/\/expense-tracker-.*\.vercel\.app$/, 
 ];
 
