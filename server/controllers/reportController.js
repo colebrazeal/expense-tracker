@@ -223,7 +223,7 @@ exports.generateYearlyReport = async (req, res) => {
       }
     };
 
-    res.json({ report });
+    res.json(report);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
