@@ -1,0 +1,164 @@
+.category-manager-container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-manager-container h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.category-manager-container > .btn-primary {
+  margin-bottom: 1.5rem;
+}
+
+.category-form {
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 2px solid #667eea;
+}
+
+.category-form h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.categories-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.category-group h3 {
+  color: #555;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #eee;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+  border-left: 3px solid;
+}
+
+.category-item.income {
+  background-color: #f1f8f4;
+  border-left-color: #4caf50;
+}
+
+.category-item.expense {
+  background-color: #fff3f3;
+  border-left-color: #f44336;
+}
+
+.category-item:hover {
+  transform: translateX(4px);
+}
+
+.category-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 1rem;
+}
+
+.category-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-form {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  align-items: center;
+}
+
+.edit-form input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.edit-form input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.btn-save {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-save:hover {
+  background-color: #43a047;
+}
+
+.btn-cancel {
+  background-color: #f44336;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #e53935;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .category-manager-container {
+    padding: 1.5rem;
+  }
+
+  .category-manager-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .categories-section {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-form {
+    flex-wrap: wrap;
+  }
+
+  .edit-form input {
+    width: 100%;
+  }
+
+  .edit-form button {
+    flex: 1;
+  }
+}
