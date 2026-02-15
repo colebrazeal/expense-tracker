@@ -15,33 +15,35 @@ function Search({ categories }) {
   const [results, setResults] = useState([]);
   const [resultCount, setResultCount] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    setIsSearching(true);
+const handleSearch = async (e) => {
+  e.preventDefault();
+  setIsSearching(true);
+  setHasSearched(true);  // ← ADD THIS LINE
 
-    try {
-      const params = {};
-      
-      if (searchTerm) params.q = searchTerm;
-      if (filters.type) params.type = filters.type;
-      if (filters.categoryId) params.categoryId = filters.categoryId;
-      if (filters.startDate) params.startDate = filters.startDate;
-      if (filters.endDate) params.endDate = filters.endDate;
-      if (filters.minAmount) params.minAmount = filters.minAmount;
-      if (filters.maxAmount) params.maxAmount = filters.maxAmount;
+  try {
+    const params = {};
+    
+    if (searchTerm) params.q = searchTerm;
+    if (filters.type) params.type = filters.type;
+    if (filters.categoryId) params.categoryId = filters.categoryId;
+    if (filters.startDate) params.startDate = filters.startDate;
+    if (filters.endDate) params.endDate = filters.endDate;
+    if (filters.minAmount) params.minAmount = filters.minAmount;
+    if (filters.maxAmount) params.maxAmount = filters.maxAmount;
 
-      const response = await transactionAPI.search(params);
-      
-      setResults(response.data.results || []);
-      setResultCount(response.data.count || 0);
-    } catch (error) {
-      console.error('Search error:', error);
-      alert('Search failed. Please try again.');
-    } finally {
-      setIsSearching(false);
-    }
-  };
+    const response = await transactionAPI.search(params);
+    
+    setResults(response.data.results || []);
+    setResultCount(response.data.count || 0);
+  } catch (error) {
+    console.error('Search error:', error);
+    alert('Search failed. Please try again.');
+  } finally {
+    setIsSearching(false);
+  }
+};
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
