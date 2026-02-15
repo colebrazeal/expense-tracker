@@ -192,7 +192,7 @@ const handleSearch = async (e) => {
       <div className="search-results">
         <h3>
           Search Results
-          {hasSearched && ` (${results.length} found)`}
+          {hasSearched && ` (${resultCount} found)`}
         </h3>
 
         {hasSearched && results.length === 0 && (
