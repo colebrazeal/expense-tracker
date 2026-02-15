@@ -1,38 +1,42 @@
 import axios from 'axios';
 
-// Determine API URL based on environment
+// Use your Render backend URL
 const API_BASE_URL = process.env.REACT_APP_API_URL || 
-                     process.env.NODE_ENV === 'production' 
-                       ? 'https://expense-tracker-i1qc.onrender.com/'
-                       : 'http://localhost:5001/api';
+                     'https://expense-tracker-i1qc.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 30000, // Increased to 30 seconds for Render cold starts
 });
 
+// Add request interceptor for debugging
 api.interceptors.request.use(
   (config) => {
-    console.log(`API Request: ${config.method.toUpperCase()} ${config.url}`);
+    console.log(`API Request: ${config.method.toUpperCase()} ${config.baseURL}${config.url}`);
     return config;
   },
   (error) => {
+    console.error('Request setup error:', error);
     return Promise.reject(error);
   }
 );
 
+// Add response interceptor for error handling
 api.interceptors.response.use(
   (response) => {
+    console.log(`API Response: ${response.status} - ${response.config.url}`);
     return response;
   },
   (error) => {
     if (error.response) {
-      console.error('API Error:', error.response.status, error.response.data);
+      console.error('API Error Response:', error.response.status, error.response.data);
     } else if (error.request) {
-      console.error('Network Error:', error.message);
+      console.error('API Network Error:', error.message);
+    } else {
+      console.error('API Error:', error.message);
     }
     return Promise.reject(error);
   }
