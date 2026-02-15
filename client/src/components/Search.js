@@ -16,21 +16,35 @@ function Search({ categories }) {
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    setIsSearching(true);
-    setHasSearched(true);
+const handleSearch = async (e) => {
+  e.preventDefault();
+  setIsSearching(true);
 
-    try {
-      const response = await transactionAPI.search(searchTerm, filters);
-      setResults(response.data.results);
-    } catch (error) {
-      console.error('Search error:', error);
-      alert('Search failed. Please try again.');
-    } finally {
-      setIsSearching(false);
-    }
-  };
+  try {
+    // Build params object - remove empty values
+    const params = {};
+    
+    if (searchTerm) params.q = searchTerm;
+    if (filters.type) params.type = filters.type;
+    if (filters.categoryId) params.categoryId = filters.categoryId;
+    if (filters.startDate) params.startDate = filters.startDate;
+    if (filters.endDate) params.endDate = filters.endDate;
+    if (filters.minAmount) params.minAmount = filters.minAmount;
+    if (filters.maxAmount) params.maxAmount = filters.maxAmount;
+
+    console.log('Search params:', params);
+
+    const response = await transactionAPI.search(params);
+    
+    setResults(response.data.results || []);
+    setResultCount(response.data.count || 0);
+  } catch (error) {
+    console.error('Search error:', error);
+    alert('Search failed. Please try again.');
+  } finally {
+    setIsSearching(false);
+  }
+};
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

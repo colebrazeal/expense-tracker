@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Reports.css';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://expense-tracker-i1qc.onrender.com/api';
 
 function Reports() {
   const [reportType, setReportType] = useState('financial');
