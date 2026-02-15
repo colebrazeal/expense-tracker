@@ -11,10 +11,38 @@ app.use(security.securityHeaders);
 app.use(security.rateLimiter);
 app.use(security.validateRequest);
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5001',
+  'https://expense-tracker-pi-opal-82.vercel.app',
+  /https:\/\/expense-tracker-.*\.vercel\.app$/, 
+];
+
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') {
+        return origin === allowed;
+      } else if (allowed instanceof RegExp) {
+        return allowed.test(origin);
+      }
+      return false;
+    });
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.warn(`Blocked by CORS: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
@@ -24,7 +52,7 @@ app.use(security.preventSqlInjection);
 app.use(security.auditLogger);
 
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`);
+  console.log(`${req.method} ${req.path} - Origin: ${req.get('origin') || 'none'}`);
   next();
 });
 
@@ -40,17 +68,23 @@ app.get('/', (req, res) => {
   res.json({ 
     message: 'Personal Expense & Budget Tracker API',
     version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
     endpoints: {
       transactions: '/api/transactions',
       categories: '/api/categories',
       reports: '/api/reports',
-      search: '/api/transactions/search'
+      search: '/api/transactions/search',
+      health: '/health'
     }
   });
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
 });
 
 app.use((req, res) => {
@@ -70,6 +104,7 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Listening on http://localhost:${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log('Allowed Origins:', allowedOrigins.map(o => o.toString()).join(', '));
     console.log('Security features enabled:');
     console.log('  - Rate limiting (100 req/min)');
     console.log('  - Input sanitization');
@@ -103,3 +138,5 @@ if (process.env.NODE_ENV !== 'test') {
     });
   });
 }
+
+module.exports = app;
