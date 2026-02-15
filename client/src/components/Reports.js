@@ -59,7 +59,7 @@ function Reports() {
       }
 
       const response = await axios.get(`${API_BASE_URL}${endpoint}`, { params });
-      setGeneratedReport(response.data.report);
+      setGeneratedReport(response.data.report || response.data);
     } catch (error) {
       console.error('Report generation error:', error);
       alert('Failed to generate report. Please check your parameters.');
